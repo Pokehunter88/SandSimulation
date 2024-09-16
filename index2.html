@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Sand Simulation</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    
+    <canvas id="pixelCanvas" width="400" height="400"></canvas>
+    <div></div>
+    <canvas id="pixelCanvas2" width="400" height="200"></canvas>
+    
+    <!--<script src="main.js"></script>-->
+    <!--<script src="/app.bundle.js"></script>-->
+
+    <script>
+      console.log("start");
+      var canvas = document.getElementById("pixelCanvas");
+      const ctx = canvas.getContext("2d");
+      
+      const scale = 5;
+      const size = 400/scale;
+
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, 400, 400);
+
+      ctx.fillStyle = "#FFD047FF";
+      //ctx.fillRect(0, 0, scale, scale);
+      
+      var colors = new Array(size);
+
+      for (var k = 0; k < size; k++)
+      {
+        colors[k] = new Array(size);
+      }
+
+      for (var x = 0; x < size; x++)
+      {
+        for (var y = 0; y < size; y++)
+        {
+          colors[y][x] = 1;
+        }
+      }
+      
+      var position = new Array(size);
+
+      for (var k = 0; k < size; k++)
+      {
+        position[k] = new Array(size);
+      }
+
+      for (var x = 0; x < size; x++)
+      {
+        for (var y = 0; y < size; y++)
+        {
+          position[y][x] = 0;
+        }
+      }
+      
+      /*position[40][38] = 2;
+      position[39][38] = 2;
+      position[38][38] = 2;
+      position[38][39] = 2;
+      position[38][40] = 2;
+      position[38][41] = 2;
+      position[40][41] = 2;
+      position[39][41] = 2;
+      
+      position[41][38] = 2;
+      position[41][41] = 2;
+      position[42][38] = 2;
+      position[42][41] = 2;
+      position[43][38] = 2;
+      position[43][41] = 2;
+      position[44][38] = 2;
+      position[44][41] = 2;*/
+      
+      function drawShape(shape, xPos, yPos) {
+        for (var x = 0; x < shape[0].length; x++)
+        {
+          for (var y = 0; y < shape.length; y++)
+          {
+            if (shape[y][x] == 1) {
+              position[y+yPos][x+xPos] = 2;
+            }
+          }
+        }
+      }
+      
+      
+      
+      
+      
+      
+      
+      var buttons = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+      
+      var canvas2 = document.getElementById("pixelCanvas2");
+      const ctx2 = canvas2.getContext("2d");
+      
+      ctx2.fillStyle = "black";
+      ctx2.fillRect(0, 0, 400, 200);
+
+      ctx2.fillStyle = "grey";
+      for (var x = 0; x < 80; x++) {
+        for (var y = 0; y < 40; y++) {
+          if (buttons[y][x] == 1) {
+            ctx2.fillRect(x * scale, y * scale, scale, scale);
+          }
+        }
+      }
+      
+      var rotation = 1;
+      
+      function updatePhysics() {
+        var tempPosition = structuredClone(position);
+        
+        switch (rotation) {
+              case 1:
+        for (var x = size-1; x >= 0; x--) {
+          for (var y = size-1; y >= 0; y--) {
+          //for (var y = 0; y < size; y++) {
+            if (position[y][x] == 1) {
+              if (y < size-1 && tempPosition[y+1][x] == 0) {
+                tempPosition[y][x] = 0;
+                tempPosition[y+1][x] = 1;
+                
+                colors[y+1][x] = colors[y][x];
+              }
+              else if ((y == size-1 || (y < size-1 && tempPosition[y+1][x] != 0)) && x > 0 && x < size-1 && y > 0 && position[y-1][x] == 1) {
+                if (tempPosition[y][x+1] != 0 && tempPosition[y][x-1] == 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y][x-1] = 1;
+                  
+                  colors[y][x-1] = colors[y][x];
+                }
+                else if (tempPosition[y][x+1] == 0 && tempPosition[y][x-1] != 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y][x+1] = 1;
+                  
+                  colors[y][x+1] = colors[y][x];
+                }
+              }}}}
+              break;
+              case 2:
+              for (var x = size-1; x >= 0; x--) {
+          for (var y = 0; y < size; y++) {
+            if (position[y][x] == 1) {
+              if (x < size-1 && tempPosition[y][x+1] == 0) {
+                tempPosition[y][x] = 0;
+                tempPosition[y][x+1] = 1;
+                
+                colors[y][x+1] = colors[y][x];
+              }
+              else if ((x == size-1 || (x < size-1 && tempPosition[y][x+1] != 0)) && y > 0 && y < size-1 && x > 0 && position[y][x-1] == 1) {
+                if (tempPosition[y+1][x] != 0 && tempPosition[y-1][x] == 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y-1][x] = 1;
+                  
+                  colors[y-1][x] = colors[y][x];
+                }
+                else if (tempPosition[y+1][x] == 0 && tempPosition[y-1][x] != 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y+1][x] = 1;
+                  
+                  colors[y+1][x] = colors[y][x];
+                }
+              }}}}
+              break;
+              case 3:
+              for (var x = 0; x < size; x++) {
+          for (var y = 0; y < size; y++) {
+            if (position[y][x] == 1) {
+              if (y > 0 && tempPosition[y-1][x] == 0) {
+                tempPosition[y][x] = 0;
+                tempPosition[y-1][x] = 1;
+                
+                colors[y-1][x] = colors[y][x];
+              }
+              else if ((y == 0 || (y > 0 && tempPosition[y-1][x] != 0)) && x > 0 && x < size-1 && y < size-1 && position[y+1][x] == 1) {
+                if (tempPosition[y][x+1] != 0 && tempPosition[y][x-1] == 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y][x-1] = 1;
+                  
+                  colors[y][x-1] = colors[y][x];
+                }
+                else if (tempPosition[y][x+1] == 0 && tempPosition[y][x-1] != 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y][x+1] = 1;
+                  
+                  colors[y][x+1] = colors[y][x];
+                }
+              }}}}
+              break;
+              case 4:
+              for (var x = 0; x < size; x++) {
+          for (var y = 0; y < size; y++) {
+            if (position[y][x] == 1) {
+              if (x > 0 && tempPosition[y][x-1] == 0) {
+                tempPosition[y][x] = 0;
+                tempPosition[y][x-1] = 1;
+                
+                colors[y][x-1] = colors[y][x];
+              }
+              else if ((x == 0 || (x > 0 && tempPosition[y][x-1] != 0)) && y > 0 && y < size-1 && x < size-1 && position[y][x+1] == 1) {
+                if (tempPosition[y+1][x] != 0 && tempPosition[y-1][x] == 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y-1][x] = 1;
+                  
+                  colors[y-1][x] = colors[y][x];
+                }
+                else if (tempPosition[y+1][x] == 0 && tempPosition[y-1][x] != 0) {
+                  tempPosition[y][x] = 0;
+                  tempPosition[y+1][x] = 1;
+                  
+                  colors[y+1][x] = colors[y][x];
+                }
+              }}}}
+              break;
+        }
+        
+        position = tempPosition;
+      }
+      
+      function updateCanvas() {
+        var count = 0;
+        
+        for (var x = 0; x < size; x++) {
+          for (var y = 0; y < size; y++) {
+            if (position[y][x] == 1) {
+              count++;
+              var color = HSVtoRGB(0.125, 0.72, colors[y][x]);
+          ctx.fillStyle = `rgb(
+        ${color["r"]}
+        ${color["g"]}
+        ${color["b"]})`;
+        
+              ctx.fillRect(x * scale, y * scale, scale, scale);
+            }
+            if (position[y][x] == 2) {
+              ctx.fillStyle = "grey";
+              ctx.fillRect(x * scale, y * scale, scale, scale);
+            }
+          }
+        }
+        
+        //console.log(count);
+      }
+      
+      function HSVtoRGB(h, s, v) {
+    var r, g, b, i, f, p, q, t;
+    if (arguments.length === 1) {
+        s = h.s, v = h.v, h = h.h;
+    }
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+}
+      
+      function cycle() {
+        setTimeout(function() {
+          ctx.fillStyle = "black";
+          ctx.fillRect(0, 0, 400, 400);
+
+          //ctx.fillStyle = "#ffd147";
+          
+          var color = HSVtoRGB(0.125, 0.72, 1);
+          ctx.fillStyle = `rgb(
+        ${color["r"]}
+        ${color["g"]}
+        ${color["b"]})`;
+          
+          //updatePhysics();
+          updateCanvas()
+
+          cycle();
+        }, 15);
+      }
+      
+      cycle()
+      
+      function spawn(x, y) {
+        position[x][y] = 1;
+        position[x-1][y] = 1;
+        position[x+1][y] = 1;
+        position[x][y-1] = 1;
+        position[x-1][y-1] = 1;
+        position[x+1][y-1] = 1;
+        position[x][y+1] = 1;
+        position[x-1][y+1] = 1;
+        position[x+1][y+1] = 1;
+        
+        colors[x][y] = 0.5 + (Math.random() * 0.5);
+        colors[x-1][y] = 0.5 + (Math.random() * 0.5);
+        colors[x+1][y] = 0.5 + (Math.random() * 0.5);
+        colors[x][y-1] = 0.5 + (Math.random() * 0.5);
+        colors[x-1][y-1] = 0.5 + (Math.random() * 0.5);
+        colors[x+1][y-1] = 0.5 + (Math.random() * 0.5);
+        colors[x][y+1] = 0.5 + (Math.random() * 0.5);
+        colors[x-1][y+1] = 0.5 + (Math.random() * 0.5);
+        colors[x+1][y+1] = 0.5 + (Math.random() * 0.5);
+      }
+      
+      var initialized = false;
+      
+      canvas.addEventListener('click', (e) => {
+        if (e.clientX < 400 && e.clientX > 0 && e.clientY < 400 && e.clientY > 0) {
+          spawn(Math.trunc(e.clientY/scale), Math.trunc(e.clientX/scale));
+        }
+        
+        if (initialized == false) {
+          initialize();
+          initialized = true;
+        }
+      });
+      
+      canvas.addEventListener('touchmove', (evt) => {
+        if (evt.touches[0].clientX < 400 && evt.touches[0].clientX > 0 && evt.touches[0].clientY < 400 && evt.touches[0].clientY > 0) {
+          spawn(Math.trunc(evt.touches[0].clientY/scale), Math.trunc(evt.touches[0].clientX/scale));
+        }
+        if (initialized == false) {
+          initialize();
+          initialized = true;
+        }
+      }, false);
+      
+      function initialize() {
+        console.log("running");
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+          DeviceMotionEvent.requestPermission()
+            .then((response) => {
+              console.log("Permission response:", response);
+              if (response === "granted") {
+                console.log("Motion permission granted.");
+                window.addEventListener("devicemotion", handleMotionEvent);
+              } else {
+                alert("Permission denied.");
+              }
+            })
+            .catch((error) => {
+              console.error("Permission request failed:", error.message);
+            });
+        } else if (window.DeviceMotionEvent) {
+          console.log("Adding devicemotion event listener.");
+          window.addEventListener("devicemotion", handleMotionEvent);
+        } else {
+          alert("DeviceMotionEvent is not supported on this device.");
+        }
+      }
+
+      function handleMotionEvent(event) {
+        //console.log(event.accelerationIncludingGravity.x + ", " + event.accelerationIncludingGravity.y + ", " + event.accelerationIncludingGravity.z);
+        
+        if (Math.abs(event.accelerationIncludingGravity.x) > Math.abs(event.accelerationIncludingGravity.y)) {
+          if (event.accelerationIncludingGravity.x > 0) {
+            rotation = 2;
+          }
+          else {
+            rotation = 4;
+          }
+        }
+        else {
+          if (event.accelerationIncludingGravity.y > 0) {
+            rotation = 3;
+          }
+          else {
+            rotation = 1;
+          }
+        }
+      }
+      
+      canvas2.addEventListener('click', (e) => {
+        console.log(e.clientX + ", " + e.clientY);
+        
+        if (e.clientX < 175 && e.clientX > 50 && e.clientY < 550 && e.clientY > 450) {
+          var arrayText = "[[";
+          var last = 0;
+          
+          for (var y = 0; y < size; y++)
+          {
+            if (y != last) {
+              arrayText = arrayText + "],[";
+              last = y;
+            }
+            
+            for (var x = 0; x < size; x++)
+            {
+              arrayText = arrayText + position[y][x]  + ",";
+            }
+          }
+          
+          console.log(arrayText);
+          navigator.clipboard.writeText(arrayText);
+          
+      /*drawShape([
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      ], 30, 30);*/
+        }
+      });
+    </script>
+
+    <style>
+      #pixelCanvas {
+        border: 2px solid grey;
+        touch-action: manipulation;
+        overflow: hidden;
+        position: fixed;
+      }
+      
+      #pixelCanvas2 {
+        border: 2px solid grey;
+        touch-action: manipulation;
+        overflow: hidden;
+        position: fixed;
+        top: 410px;
+      }
+      
+      body {
+        background-color: black;
+        overflow: hidden;
+        position: fixed;
+      }
+    </style>
+  </body>
+</html>
